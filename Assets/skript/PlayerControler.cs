@@ -5,10 +5,10 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour
 {
     [SerializeField]  private float speed = 3;
-    private float jump = 300;
+    private float jump = 400;
     public Rigidbody2D phy;
     public Animator animator;
-
+    private bool gravity = true;
     [SerializeField] private float _maxSpeed = 10;
 
     private void FixedUpdate()
@@ -38,15 +38,27 @@ public class PlayerControler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            phy.AddForce(transform.up * jump);
+            print("paskacaty");
+            if (gravity == true)
+            {
+                phy.AddForce(Vector2.up * jump);
+                phy.gravityScale = -1;
+                gravity = false;
+            }
+            else
+            {
+                phy.AddForce(Vector2.down * jump);
+                phy.gravityScale = 1;
+                gravity = true;
+            }
         }
     }
 
     void limitSpeed()
     {
-        if (phy.linearVelocity.magnitude > _maxSpeed)
+        if (phy.velocity.magnitude > _maxSpeed)
         {
-            phy.linearVelocity = phy.linearVelocity.normalized * _maxSpeed;
+            phy.velocity = phy.velocity.normalized * _maxSpeed;
         }
     }
 }
